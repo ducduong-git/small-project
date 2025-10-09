@@ -1,0 +1,64 @@
+{% extends 'admin_page/base.html.twig' %}
+
+{% block title %}
+	Register
+{% endblock %}
+
+{% block body %}
+	<div class="register-page">
+		<div class="register-box">
+			<div class="register-logo">
+				<a href={{ url('login_page', parameters = [], schemeRelative = false) }}>
+					Register
+				</a>
+			</div>
+			<!-- /.register-logo -->
+			<div class="card">
+				<div class="card-body register-card-body">
+					<p class="register-box-msg">Register a new membership</p>
+					<form action={{ url('register_user', parameters = [], schemeRelative = false) }} method="post">
+						<div class="input-group mb-3">
+							<input type="text" name='fname' class="form-control" placeholder="First Name"/>
+							<div class="input-group-text">
+								<span class="bi bi-person"></span>
+							</div>
+						</div>
+						<div class="input-group mb-3">
+							<input type="text" name='lname' class="form-control" placeholder="Last Name"/>
+							<div class="input-group-text">
+								<span class="bi bi-person"></span>
+							</div>
+						</div>
+						<div class="input-group mb-3">
+							<input type="email" name='gmail' class="form-control" placeholder="Email"/>
+							<div class="input-group-text">
+								<span class="bi bi-envelope"></span>
+							</div>
+						</div>
+						<div class="input-group mb-3">
+							<input type="password" name='passw' class="form-control" placeholder="Password"/>
+							<div class="input-group-text">
+								<span class="bi bi-lock-fill"></span>
+							</div>
+						</div>
+						<!--begin::Row-->
+						<div class="row">
+							<div class="d-grid gap-2">
+								<button type="submit" class="btn btn-primary">Sign In</button>
+							</div>
+							<!-- /.col -->
+						</div>
+						<!--end::Row-->
+					</form>
+
+					<p class="mb-0 mt-3">
+						<a href={{ url('login_page', parameters = [], schemeRelative = false) }} class="text-center">
+							I already have a membership
+						</a>
+					</p>
+				</div>
+				<!-- /.register-card-body -->
+			</div>
+		</div>
+	</div>
+{% endblock %}

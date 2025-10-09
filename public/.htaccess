@@ -1,0 +1,35 @@
+# Use the front controller as index file. It serves as a fallback solution when every other rewrite/redirect fails.
+# Make sure to remove the front controller from all other RewriteRules in this file.
+DirectoryIndex index.php
+
+# Rewrite rules
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Ensure that Authorization HTTP header is available to PHP
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # If the requested filename exists, serve it directly
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # If the requested filename is a directory, serve it directly
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Otherwise, forward to the front controller
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    # When mod_rewrite is not available, enable symlinks
+    <IfModule mod_alias.c>
+        RedirectMatch 302 ^/$ /index.php/
+    </IfModule>
+</IfModule>
