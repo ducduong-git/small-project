@@ -7,8 +7,12 @@ use App\Repository\UserRepository;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
+#[ORM\HasLifecycleCallbacks] // thông báo cho Doctrine rằng Entity này có các method callback (PrePersist, PreUpdate) để được gọi tự động.
 class UserEntity
 {
+    private const STATUS_ACTIVE = 1;
+    private const ROLE_USER = 0;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -26,11 +30,11 @@ class UserEntity
     #[ORM\Column(length: 255)]
     private ?string $passw = null;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?int $permission = 0;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $permission = self::ROLE_USER;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $status = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $status = self::STATUS_ACTIVE;
 
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $phone_num = null;
@@ -38,14 +42,21 @@ class UserEntity
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 10, nullable: true)]
-    private ?string $gender_role = null;
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private ?int $genderRole = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $updatedAt = null;
 
     // --- Getters and Setters ---
     public function getId(): ?int
     {
         return $this->id;
     }
+
     public function getFname(): ?string
     {
         return $this->fname;
@@ -60,6 +71,7 @@ class UserEntity
     {
         return $this->lname;
     }
+
     public function setLname(string $lname): self
     {
         $this->lname = $lname;
@@ -70,6 +82,7 @@ class UserEntity
     {
         return $this->gmail;
     }
+
     public function setGmail(string $gmail): self
     {
         $this->gmail = $gmail;
@@ -87,7 +100,7 @@ class UserEntity
         return $this;
     }
 
-    public function getPermission(): ?string
+    public function getPermission(): ?int
     {
         return $this->permission;
     }
@@ -98,10 +111,11 @@ class UserEntity
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?int
     {
         return $this->status;
     }
+
     public function setStatus(string $status): self
     {
         $this->status = $status;
@@ -128,13 +142,53 @@ class UserEntity
         return $this;
     }
 
-    public function getGenderRole(): ?string
+    public function getGenderRole(): ?int
     {
-        return $this->gender_role;
+        return $this->genderRole;
     }
-    public function setGenderRole(?string $gender_role): self
+
+    public function setGenderRole(?int $genderRole): self
     {
-        $this->gender_role = $gender_role;
+        $this->genderRole = $genderRole;
         return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    // --- Lifecycle callback methods ---
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $now = new \DateTimeImmutable();
+        if ($this->createdAt === null) {
+            $this->createdAt = $now;
+        }
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
     }
 }

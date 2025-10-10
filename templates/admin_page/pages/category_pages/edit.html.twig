@@ -1,0 +1,85 @@
+{% extends 'admin_page/base.html.twig' %}
+
+{% block title %}Admin Page | Edit Category
+{% endblock %}
+
+{% block body %}
+	<!--begin::Horizontal Form-->
+	<div
+		class="card card-warning card-outline m-4 w-50">
+		<!--begin::Header-->
+		<div class="card-header">
+			<div class="card-title">Edit category</div>
+		</div>
+		<!--end::Header-->
+		<!--begin::Form-->
+		<form action="{{ url('update_categories', parameters = [], schemeRelative = false) }}" method="PUT">
+			<input
+			type="text" class="form-control" id="inputName" name="idCategory" value="{{ editCategory.id }}" hidden/>
+			<!--begin::Body-->
+			<div class="card-body">
+				<div class="row mb-3">
+					<label for="inputName" class="col-sm-2 col-form-label">Name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="inputName" name="name" value="{{ editCategory.name }}"/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="validationCustom04" class="col-sm-2 col-form-label">Sub category</label>
+					<div class="col-sm-10">
+						<select class="form-select" id="validationCustom04" name="parentId">
+							<option {{ editCategory.parentId == 0 ? 'selected' : '' }} disabled value="0">Choose...</option>
+							{% for category in categories %}
+								<option {{ editCategory.parentId == category.id ? 'selected' : '' }} value="{{ category.id }}">{{ category.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<fieldset class="row mb-3">
+					<legend class="col-form-label col-sm-2 pt-0">Status</legend>
+					<div class="col-sm-10">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="status" id="gridRadios1" value="1" {{ editCategory.status == 1 ? 'checked' : '' }}/>
+							<label class="form-check-label" for="gridRadios1">
+								Active
+							</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="status" id="gridRadios2" value="0" {{ editCategory.status == 0 ? 'checked' : '' }}/>
+							<label class="form-check-label" for="gridRadios2">
+								In Active
+							</label>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<!--end::Body-->
+			<!--begin::Footer-->
+			<div class="card-footer">
+				<button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confrimRemove">Delete</button>
+				<button type="submit" class="btn btn-primary">Update</button>
+			</div>
+			<!--end::Footer-->
+		</form>
+		<!--end::Form-->
+		<!-- Modal -->
+		<div class="modal fade" id="confrimRemove" tabindex="-1" aria-labelledby="confrimRemoveLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="confrimRemoveLabel">Do you want to delete it ?</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<form action="{{ url('soft_delete_categories', parameters = [], schemeRelative = false) }}" method="DELETE">
+							<input type="text" class="form-control" id="inputName" name="idCategory" value="{{ editCategory.id }}" hidden/>
+							<button type="submit" class="btn btn-primary">Yes</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--end::Horizontal Form-->
+{% endblock %}

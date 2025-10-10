@@ -1,38 +1,80 @@
 <?php
 
-namespace App\Service\User;
+namespace App\Service\Category;
 
-use App\Entity\UserEntity;
-use App\Repository\UserRepository;
+use App\Entity\CategoryEntity;
+use App\Repository\CategoryRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 
-class UserService
+class CategoryService
 {
+    private CategoryRepository $categoryRepository;
 
-    private UserRepository $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(private HtmlSanitizerInterface $sanitizer, CategoryRepository $categoryRepository)
     {
-        $this->userRepository = $userRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
-    public function getUserByGmail(string $gmail): ?UserEntity
+    public function checkFormRequest(Request $request): ?CategoryEntity
     {
-        return $this->userRepository->findByGmail($gmail);
+        $name_category = $this->sanitizer->sanitize(trim($request->request->get('name')));
+
+        if (!isset($name_category) || empty($name_category)) {
+            return null;
+        }
+
+        $category = new CategoryEntity();
+        $category->setName($name_category)->setStatus($request->request->get('status'))->setParentId($request->request->get('parentId') ?? 0);
+
+        return $category;
     }
 
-    public function createUser(array $userData): UserEntity
+    public function getAllCategory(): ?array
     {
-        $user = new UserEntity();
-        $user->setFname($userData['fname']);
-        $user->setLname($userData['lname']);
-        $user->setGmail($userData['gmail']);
-        $user->setPassw(password_hash($userData['passw'], PASSWORD_DEFAULT));
-        $user->setPermission($userData['permission'] ?? 0);
-        $user->setStatus(1); // Active by default
-        $user->setPhoneNum($userData['phone_num'] ?? null);
-        $user->setAddress($userData['address'] ?? null);
-        $user->setGenderRole($userData['gender_role'] ?? null);
+        return $this->categoryRepository->getAllCategory();
+    }
 
-        return $this->userRepository->save($user);
+    public function getExistCategory(): ?array
+    {
+        return $this->categoryRepository->getExistCategory();
+    }
+
+    public function addNewCategory(CategoryEntity $categoryEntity): CategoryEntity
+    {
+        return $this->categoryRepository->addNewCategory($categoryEntity);
+    }
+
+    public function getSingleCategory(int $id): ?CategoryEntity
+    {
+        return $this->categoryRepository->findOneCategory($id);
+    }
+
+    public function updateCategory(int $id, CategoryEntity $categoryEntity): ?CategoryEntity
+    {
+        $category = $this->categoryRepository->findOneCategory($id);
+
+        $name = $category->getName();
+        $parentId = $category->getParentId();
+        $status = $category->getStatus();
+
+        if ($name != $categoryEntity->getName()) {
+            $name = $categoryEntity->getName();
+        }
+
+        if ($parentId != $categoryEntity->getParentId()) {
+            $parentId = $categoryEntity->getParentId();
+        }
+
+        if ($status != $categoryEntity->getStatus()) {
+            $status = $categoryEntity->getStatus();
+        }
+
+        return $this->categoryRepository->updateCategory($id, $name, $status, $parentId);
+    }
+
+    public function softDeleteCategory(int $id)
+    {
+        return $this->categoryRepository->softDeleteCategory($id);
     }
 }

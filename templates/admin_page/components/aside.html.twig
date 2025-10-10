@@ -5,7 +5,7 @@
 		class="sidebar-brand">
 		<!--begin::Brand Link-->
 		<a
-			href="./index.html" class="brand-link">
+			href="{{ url('admin_page', parameters = [], schemeRelative = false) }}" class="brand-link">
 			<!--begin::Brand Text-->
 			<span class="brand-text fw-light">
 				Admin Dashboard</span>
@@ -20,17 +20,18 @@
 			class="mt-2">
 			<!--begin::Sidebar Menu-->
 			<ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" aria-label="Main navigation" data-accordion="false" id="navigation">
+
 				<li class="nav-item">
-					<a href={{ url('admin_page', parameters = [], schemeRelative = false) }} class="nav-link">
+					<a href="{{ url('admin_page', parameters = [], schemeRelative = false) }}" class="nav-link">
 						<i class="nav-icon bi bi-circle text-info"></i>
 						<p>
 							Dashboard
 						</p>
 					</a>
 				</li>
-				<li class="nav-header">Sale</li>
+				<li class="nav-header">Shop</li>
 				<li class="nav-item">
-					<a href={{ url('admin_categories', parameters = [], schemeRelative = false) }} class="nav-link">
+					<a href="{{ url('admin_categories', parameters = [], schemeRelative = false) }}" class="nav-link">
 						<i class="nav-icon bi bi-circle text-info"></i>
 						<p>
 							Categories
@@ -38,17 +39,17 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href={{ url('admin_page', parameters = [], schemeRelative = false) }} class="nav-link">
+					<a href="{{ url('admin_product', parameters = [], schemeRelative = false) }}" class="nav-link">
 						<i class="nav-icon bi bi-circle text-info"></i>
 						<p>
-							Product
+							Products
 						</p>
 					</a>
 				</li>
 
 				<li class="nav-header">Users</li>
 				<li class="nav-item">
-					<a href={{ url('admin_page', parameters = [], schemeRelative = false) }} class="nav-link">
+					<a href="{{ url('admin_page', parameters = [], schemeRelative = false) }}" class="nav-link">
 						<i class="nav-icon bi bi-circle text-info"></i>
 						<p>
 							List user
@@ -56,7 +57,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href={{ url('admin_page', parameters = [], schemeRelative = false) }} class="nav-link">
+					<a href="{{ url('admin_page', parameters = [], schemeRelative = false) }}" class="nav-link">
 						<i class="nav-icon bi bi-circle text-info"></i>
 						<p>
 							Permission

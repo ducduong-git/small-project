@@ -18,15 +18,11 @@
 							<li class="category-item category-item--active">
 								<a href="#" class="category-item__link">All</a>
 							</li>
+							{% for item in category %}
 							<li class="category-item">
-								<a href="#" class="category-item__link">Laptop Gaming</a>
+								<a href="#" class="category-item__link">{{ item.name }}</a>
 							</li>
-							<li class="category-item">
-								<a href="#" class="category-item__link">Laptop Văn Phòng</a>
-							</li>
-							<li class="category-item">
-								<a href="#" class="category-item__link">Laptop Đồ Họa</a>
-							</li>
+							{% endfor %}
 						</ul>
 					</nav>
 				</div>

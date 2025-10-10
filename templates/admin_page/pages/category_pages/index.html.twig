@@ -1,8 +1,62 @@
 {% extends 'admin_page/base.html.twig' %}
 
-{% block title %}Admin Page
+{% block title %}Admin Page | Categories
 {% endblock %}
 
 {% block body %}
-hi
+	{% if categories is empty %}
+		<div class="card m-4">
+			<div class="card-header border-0">
+				<h3 class="card-title">Categories</h3>
+				<div class="card-tools">
+					<a href="{{ url('new_categories', parameters = [], schemeRelative = false) }}" class="btn btn-tool btn-sm">
+						<i class="bi bi-plus-square"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<div class="card m-4">
+			<div class="card-header border-0">
+				<h3 class="card-title">Categories</h3>
+				<div class="card-tools">
+					<a href="{{ url('new_categories', parameters = [], schemeRelative = false) }}" class="btn btn-tool btn-sm">
+						<i class="bi bi-plus-square"></i>
+					</a>
+				</div>
+			</div>
+			<div class="card-body table-responsive p-0">
+				<table class="table table-striped align-middle">
+					<thead>
+						<tr>
+							<th>No.</th>
+							<th>Name</th>
+							<th>Status</th>
+							<th>More</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for key, category in categories %}
+							<tr>
+								<td>
+									{{ key }}
+								</td>
+								<td>{{ category.name }}</td>
+								<td>
+									<b class="{{ category.status > 0 ? 'text-success' : 'text-danger' }}">
+										{{ category.status > 0 ? 'Active' : 'In Active' }}
+									</b>
+								</td>
+								<td>
+									<a href="{{ url('edit_categories', {'id': category.id}, schemeRelative = false) }}" class="text-secondary">
+										<i class="bi bi-pencil-square"></i>
+									</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	{% endif %}
 {% endblock %}
