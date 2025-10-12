@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20251010033617 extends AbstractMigration
+final class Version20251011055118 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,8 +20,12 @@ final class Version20251010033617 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE category (id SERIAL NOT NULL, name VARCHAR(255) DEFAULT NULL, status INT NOT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE "user" (id SERIAL NOT NULL, fname VARCHAR(255) DEFAULT NULL, lname VARCHAR(255) DEFAULT NULL, gmail VARCHAR(180) NOT NULL, passw VARCHAR(255) NOT NULL, permission INT DEFAULT NULL, status INT DEFAULT NULL, phone_num VARCHAR(20) DEFAULT NULL, address VARCHAR(255) DEFAULT NULL, gender_role INT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE category (id SERIAL NOT NULL, name VARCHAR(255) DEFAULT NULL, status INT NOT NULL, parent_id INT DEFAULT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE product (id SERIAL NOT NULL, name VARCHAR(255) DEFAULT NULL, qty INT DEFAULT NULL, main_img TEXT DEFAULT NULL, list_img TEXT NOT NULL, price DOUBLE PRECISION DEFAULT NULL, status INT NOT NULL, cate_id INT NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, deleted_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('COMMENT ON COLUMN product.created_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('COMMENT ON COLUMN product.updated_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('COMMENT ON COLUMN product.deleted_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('CREATE TABLE users (id SERIAL NOT NULL, fname VARCHAR(255) DEFAULT NULL, lname VARCHAR(255) DEFAULT NULL, gmail VARCHAR(180) NOT NULL, passw VARCHAR(255) NOT NULL, permission INT DEFAULT NULL, status INT DEFAULT NULL, phone_num VARCHAR(20) DEFAULT NULL, address VARCHAR(255) DEFAULT NULL, gender_role INT DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE messenger_messages (id BIGSERIAL NOT NULL, body TEXT NOT NULL, headers TEXT NOT NULL, queue_name VARCHAR(190) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, available_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, delivered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_75EA56E0FB7336F0 ON messenger_messages (queue_name)');
         $this->addSql('CREATE INDEX IDX_75EA56E0E3BD61CE ON messenger_messages (available_at)');
@@ -44,7 +48,8 @@ final class Version20251010033617 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('DROP TABLE category');
-        $this->addSql('DROP TABLE "user"');
+        $this->addSql('DROP TABLE product');
+        $this->addSql('DROP TABLE users');
         $this->addSql('DROP TABLE messenger_messages');
     }
 }

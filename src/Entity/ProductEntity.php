@@ -25,7 +25,7 @@ class ProductEntity
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $mainImg = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $listImg = null;
 
     #[ORM\Column(nullable: true)]

@@ -26,6 +26,13 @@ class ProductEntityRepository extends ServiceEntityRepository
         return $this->find($id);
     }
 
+    public function addNewProduct(ProductEntity $productEntity): ?ProductEntity
+    {
+        $this->getEntityManager()->persist($productEntity);
+        $this->getEntityManager()->flush();
+        return $productEntity;
+    }
+
     public function getExistProduct(): ?array
     {
         return $this->createQueryBuilder('p')
