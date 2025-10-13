@@ -22,8 +22,8 @@ class ProductAjaxController extends AbstractController
                 'id' => $product->getId(),
                 'name' => $product->getName(),
                 'qty' => $product->getQty(),
-                'price' => $product->getPrice(),
-                'status' => $product->getStatus(),
+                'price' => number_format($product->getPrice(), 0, ',', '.') . ' ₫',
+                'status' => $product->getStatus() != 0 ? 'Active' : 'In Active',
                 'cateId' => $product->getCateId(),
                 'mainImg' => $product->getMainImg(),
             ];

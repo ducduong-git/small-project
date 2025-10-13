@@ -4,5 +4,128 @@
 {% endblock %}
 
 {% block body %}
-	
+	<!-- begin::Horizontal Form -->
+	<div
+		class="card card-warning card-outline m-4 w-50">
+		<!-- begin::Header -->
+		<div class="card-header">
+			<div class="card-title">Edit Product</div>
+		</div>
+		<!-- end::Header -->
+		<!-- begin::Form -->
+		<form
+			action="{{ url('update_product', parameters=[], schemeRelative=false) }}" method="POST" enctype="multipart/form-data">
+            <input name="prodId" hidden value="{{ editProduct.id }}">
+			<!-- begin::Body -->
+			<div class="card-body">
+				<div class="row mb-3">
+					<label for="inputName" class="col-sm-2 col-form-label">Name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="inputName" name="name" value="{{ editProduct.name }}"/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputQuantity" class="col-sm-2 col-form-label">Quantity</label>
+					<div class="col-sm-10">
+						<input type="number" class="form-control" id="inputQuantity" name="qty" min="1" value="{{ editProduct.qty }}"/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="inputPrice" class="col-sm-2 col-form-label">Price</label>
+					<div class="col-sm-10">
+						<input type="number" class="form-control" id="inputPrice" name="price" min="1"  value="{{ editProduct.price }}"/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="validationCustom04" class="col-sm-2 col-form-label">Category</label>
+					<div class="col-sm-10">
+						<select class="form-select" id="validationCustom04" name="cate_id" required>
+							<option disabled value="0">Choose...</option>
+							{% for category in categories %}
+								<option value="{{ category.id }}" 
+                                {% if editProduct.cateId == category.id %}
+                                    selected
+                                {% endif %} >{{ category.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="main_image" class="col-sm-2 col-form-label">Poster</label>
+					<div class="col-sm-10">
+						<input id="main_image" type="file" name="main_image"/>
+						<div id="preview-main_image">
+                            {% if editProduct.mainImg is not empty %}
+                                <img src="{{ asset('uploads/images/products/' ~ editProduct.mainImg) }}" style="width: 150px">
+                            {% endif %}
+                        </div>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="list_img" class="col-sm-4 col-form-label">Product detail image</label>
+					<div class="col-sm-8">
+						<input id="list_img" type="file" name="list_img[]" multiple />
+						<div id="preview-list_img">
+                            {% if editProduct.listImg is not empty %}
+                                {% for img in editProduct.listImg %}
+                                    <img src="{{ asset('uploads/images/products/' ~ img) }}" style="width: 150px">
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+					</div>
+				</div>
+				<fieldset class="row mb-3 mt-3">
+					<legend class="col-form-label col-sm-2 pt-0">Status</legend>
+					<div class="col-sm-10">
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="status" id="gridRadios1" value="1" checked/>
+							<label class="form-check-label" for="gridRadios1">Active</label>
+						</div>
+						<div class="form-check">
+							<input class="form-check-input" type="radio" name="status" id="gridRadios2" value="0"/>
+							<label class="form-check-label" for="gridRadios2">In Active</label>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<!-- end::Body -->
+			<!-- begin::Footer -->
+			<div class="card-footer">
+				<button type="submit" class="btn btn-primary">Update</button>
+			</div>
+			<!-- end::Footer -->
+		</form>
+		<!-- end::Form -->
+	</div>
+	<!-- end::Horizontal Form -->
+{% endblock %}
+
+{% block extendFooter %}
+  <script>
+	$(document).ready(function() {
+		$('input[type="file"]').on('change', function(event) {
+			let id = $(this).attr('id');
+			let idPreview = 'preview-' + id;
+			renderImage(idPreview, event.target.files);
+		});
+	});
+
+	function renderImage(idPreview, files) {
+		let preview = $(`#${idPreview}`);
+		preview.empty();
+
+		$.each(files, function(i, file) {
+			let reader = new FileReader();
+
+			reader.onload = function(e) {
+				$('<img>', {
+					src: e.target.result,
+					width: 150
+				}).appendTo(preview);
+			};
+
+			reader.readAsDataURL(file);
+		});
+	}
+  </script>
 {% endblock %}

@@ -11,22 +11,24 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ProductPageController extends AbstractController
 {
+    private const _PRODUCT_PATH = "admin_page/pages/product_pages/";
+    private const _PREFIX = "//admin/";
 
-    #[Route('/admin/products', name: 'admin_product')]
+    #[Route(self::_PREFIX . 'products', name: 'admin_product')]
     public function index(): Response
     {
-        return $this->render('admin_page/pages/product_pages/index.html.twig');
+        return $this->render(self::_PRODUCT_PATH . 'index.html.twig');
     }
 
-    #[Route('/admin/new-product', name: 'new_product')]
-    public function addMoreCategoryPage(CategoryService $categoryService): Response
+    #[Route(self::_PREFIX . 'new-product', name: 'new_product')]
+    public function addMoreProductPage(CategoryService $categoryService): Response
     {
         $categories = $categoryService->getExistCategory();
-        return $this->render('admin_page/pages/product_pages/add.html.twig', ['categories' => $categories]);
+        return $this->render(self::_PRODUCT_PATH . 'add.html.twig', ['categories' => $categories]);
     }
 
-    #[Route('/admin/submit-product', name: 'add_product', methods: ['POST'])]
-    public function addMoreCategory(Request $request, ProductService $productService): Response
+    #[Route(self::_PREFIX . 'submit-product', name: 'add_product', methods: ['POST'])]
+    public function addMoreProduct(Request $request, ProductService $productService): Response
     {
         $product = $productService->checkFormRequest($request);
 
@@ -47,33 +49,45 @@ class ProductPageController extends AbstractController
         return $this->redirectToRoute('admin_product');
     }
 
-    // #[Route('/admin/edit-categories/{id}', name: 'edit_categories')]
-    // public function editCategoryPage(CategoryService $categoryService, int $id): Response
-    // {
-    //     $categories = $categoryService->getAllCategory();
-    //     $current_category = $categoryService->getSingleCategory($id);
+    #[Route(self::_PREFIX . 'edit-product/{id}', name: 'edit_product')]
+    public function editProductPage(CategoryService $categoryService, ProductService $productService, int $id): Response
+    {
+        $categories = $categoryService->getAllCategory();
 
-    //     return $this->render('admin_page/pages/category_pages/edit.html.twig', ['categories' => $categories, 'editCategory' => $current_category]);
-    // }
+        $currentProduct = $productService->getSingleProduct($id);
 
-    // #[Route('/admin/update-categories', name: 'update_categories', methods: ['PUT'])]
-    // public function updateCategoryPage(CategoryService $categoryService, Request $request): Response
-    // {
-    //     $category = $categoryService->checkFormRequest($request);
+        $beautiProductValue = [
+            'id' => $currentProduct->getId(),
+            'name' => $currentProduct->getName(),
+            'qty' => $currentProduct->getQty(),
+            'price' => $currentProduct->getPrice(),
+            'status' => $currentProduct->getStatus(),
+            'cateId' => $currentProduct->getCateId(),
+            'mainImg' => $currentProduct->getMainImg(),
+            'listImg' => json_decode($currentProduct->getListImg())
+        ];
 
-    //     $referer = $request->headers->get('referer');
+        return $this->render(self::_PRODUCT_PATH . 'edit.html.twig', ['categories' => $categories, 'editProduct' => $beautiProductValue]);
+    }
 
-    //     if (!isset($category) || empty($category)) {
-    //         $this->addFlash('error', 'Invalid name of category');
-    //         return $this->redirect($referer);
-    //     }
+    #[Route(self::_PREFIX . 'update-product', name: 'update_product', methods: ['POST'])]
+    public function updateProduct(ProductService $productService, Request $request): Response
+    {
+        $product = $productService->checkFormRequest($request);
+        
+        $referer = $request->headers->get('referer');
 
-    //     $categoryService->updateCategory($request->request->get('idCategory'), $category);
+        if (!isset($product) || empty($product)) {
+            $this->addFlash('error', 'Invalid name of category');
+            return $this->redirect($referer);
+        }
 
-    //     return $this->redirectToRoute('admin_categories');
-    // }
+        $productService->updateProduct( $request);
 
-    // #[Route('/admin/soft-delete-categories', name: 'soft_delete_categories', methods: ['DELETE'])]
+        return $this->redirectToRoute('admin_product');
+    }
+
+    // #[Route(self::_PREFIX . 'soft-delete-categories', name: 'soft_delete_categories', methods: ['DELETE'])]
     // public function softDeleteCategory(CategoryService $categoryService, Request $request): Response
     // {
     //     $exitsCategory = $categoryService->getSingleCategory($request->request->get('idCategory'));

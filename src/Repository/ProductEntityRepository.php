@@ -21,7 +21,7 @@ class ProductEntityRepository extends ServiceEntityRepository
         return $this->findAll();
     }
 
-    public function findOneCategory(int $id): ?ProductEntity
+    public function findOneProduct(int $id): ?ProductEntity
     {
         return $this->find($id);
     }
@@ -42,23 +42,13 @@ class ProductEntityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // public function updateCategory(int $id, string $newName, ?int $status = null, ?int $parentId = null): ProductEntity
-    // {
-    //     $category = $this->find($id);
-    //     $category->setName($newName);
+    public function update(ProductEntity $productEntity): ?ProductEntity
+    {
+         // Entity is already managed, just flush
+        $this->getEntityManager()->flush();
 
-    //     if ($status !== null) {
-    //         $category->setStatus($status);
-    //     }
-
-    //     if ($parentId !== null) {
-    //         $category->setParentId($parentId);
-    //     }
-
-    //     $this->getEntityManager()->flush();
-
-    //     return $category;
-    // }
+        return $productEntity;
+    }
 
     // public function softDeleteCategory(int $id): ProductEntity
     // {

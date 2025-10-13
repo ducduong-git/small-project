@@ -24,7 +24,7 @@ class ProductService
         $nameProduct = $this->sanitizer->sanitize(trim($request->request->get('name')));
         $categoryId = $request->request->get('cate_id');
 
-        if (!isset($nameProduct) || empty($nameProduct) || !isset($nameProduct) || empty($nameProduct) || $categoryId == 0) {
+        if (!isset($nameProduct) || empty($nameProduct) || !isset($categoryId) || empty($categoryId) || $categoryId == 0) {
             return null;
         }
 
@@ -64,24 +64,94 @@ class ProductService
         return $newFilename;
     }
 
+    private function removeImage($file): String
+    {
+        $imagePath = $this->uploadDir . '/' . $file;
+
+        if (file_exists($imagePath)) {
+            unlink($imagePath); // Deletes the file
+        }
+
+        return '';
+    }
+
     public function addNewProduct(ProductEntity $productEntity, Request $request): ?ProductEntity
     {
         $file = $request->files->get('main_image');
+        $listFile = $request->files->get('list_img');
         $name = $request->request->get('name');
 
         if (!$file) {
             return null;
         }
 
-        $file_name = $this->addImage($file, $name);
+        $fileName = $this->addImage($file, $name);
 
-        if (!$file_name) {
+        if (!$fileName) {
             return null;
         }
 
-        $productEntity->setMainImg($file_name);
+        $listImageName = [];
+
+        foreach ($listFile as $file) {
+            $listImageName[] = $this->addImage($file, $name);
+        }
+
+        $jsonListImageName = json_encode($listImageName);
+
+        $productEntity->setMainImg($fileName)->setListImg($jsonListImageName);
 
         $this->productRepository->addNewProduct($productEntity);
+
+        return $productEntity;
+    }
+
+    public function getSingleProduct(int $id): ?ProductEntity
+    {
+        return $this->productRepository->findOneProduct($id);
+    }
+
+    public function updateProduct(Request $request): ?ProductEntity
+    {
+        $file = $request->files->get('main_image');
+        $listFile = $request->files->get('list_img');
+        $name = $request->request->get('name');
+
+        $productEntity = $this->productRepository->findOneProduct($request->request->get('prodId'));
+
+        if ($file) {
+            $this->removeImage($productEntity->getMainImg());
+
+            $fileName = $this->addImage($file, $name);
+
+            $productEntity->setMainImg($fileName);
+        }
+
+        if ($listFile) {
+            $listOldImage = json_decode($productEntity->getListImg());
+
+            foreach ($listOldImage as $imageFile) {
+                $this->removeImage($imageFile);
+            }
+
+            $listImageName = [];
+
+            foreach ($listFile as $file) {
+                $listImageName[] = $this->addImage($file, $name);
+            }
+
+            $jsonListImageName = json_encode($listImageName);
+
+            $productEntity->setListImg($jsonListImageName);
+        }
+
+        $productEntity->setName($name)
+            ->setQty($request->request->get('qty'))
+            ->setStatus($request->request->get('status'))
+            ->setCateId($request->request->get('cate_id'))
+            ->setPrice($request->request->get('price'));
+
+        $this->productRepository->update($productEntity);
 
         return $productEntity;
     }
