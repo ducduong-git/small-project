@@ -1,0 +1,53 @@
+{% extends 'admin_page/base.html.twig' %} {% block title %} Admin Page | User
+{% endblock %} {% block body %}
+<div class="card m-4">
+    <div class="card-header border-0">
+        <h3 class="card-title">List User</h3>
+        <div class="card-tools">
+            <a
+                href="{{ url('new_product', parameters=[], schemeRelative=false) }}"
+                class="btn btn-tool btn-sm"
+                ><i class="bi bi-plus-square"></i
+            ></a>
+        </div>
+    </div>
+    <div class="card-body table-responsive p-0 mx-3">
+        <table id="productsTable"></table>
+    </div>
+</div>
+{% endblock %} {% block extendFooter %}
+<link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.css"
+/>
+<script src="https://cdn.datatables.net/2.3.4/js/dataTables.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // If DataTable already instantiated, destroy it
+        if ( $.fn.DataTable.isDataTable('#productsTable') ) {
+            $('#productsTable').DataTable().clear().destroy();
+        }
+        
+        $('#productsTable').DataTable({
+        ajax: "{{ url("ajax_get_product", parameters = [], schemeRelative = false) }}",
+        columns: [
+            { data: 'id', title: 'ID', className: 'text-center' },
+            { data: 'name', title: 'Name', className: 'text-center' },
+            { data: 'gmail', title: 'Gmail' , className: 'text-center'},
+            { data: 'status', title: 'Status' , className: 'text-center'},
+            { data: 'phone', title: 'Phone Number' , className: 'text-center'},
+            { data: 'permission', title: 'Permission' , className: 'text-center'},
+            // Add more columns based on your product fields
+            {
+                data: null,
+                title: 'Actions',
+                render: function(data, type, row) {
+                    return '<a href="/admin/edit-product/' + row.id + '" class="btn btn-sm btn-primary">Edit</a>';
+                }
+            }
+        ]
+        });
+    });
+</script>
+{% endblock %}

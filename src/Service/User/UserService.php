@@ -8,11 +8,8 @@ use App\Repository\UserRepository;
 class UserService
 {
 
-    private UserRepository $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(private UserRepository $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     public function getUserByGmail(string $gmail): ?UserEntity
@@ -20,19 +17,8 @@ class UserService
         return $this->userRepository->findByGmail($gmail);
     }
 
-    public function createUser(array $userData): UserEntity
+    public function getAll(): ?array
     {
-        $user = new UserEntity();
-        $user->setFname($userData['fname']);
-        $user->setLname($userData['lname']);
-        $user->setGmail($userData['gmail']);
-        $user->setPassw(password_hash($userData['passw'], PASSWORD_DEFAULT));
-        $user->setPermission($userData['permission'] ?? 0);
-        $user->setStatus(1); // Active by default
-        $user->setPhoneNum($userData['phone_num'] ?? null);
-        $user->setAddress($userData['address'] ?? null);
-        $user->setGenderRole($userData['gender_role'] ?? null);
-
-        return $this->userRepository->save($user);
+        return $this->userRepository->getAll();
     }
 }

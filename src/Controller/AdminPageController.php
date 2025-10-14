@@ -9,6 +9,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class AdminPageController extends AbstractController
 {
+    private const _PREFIX_PAGE_ADMIN_REDER = "admin_page/pages/";
+
     #[Route('/admin', name: 'admin_page')]
     public function index(Request $request): Response
     {
@@ -20,6 +22,6 @@ class AdminPageController extends AbstractController
             return $this->redirectToRoute('login_page');
         }
 
-        return $this->render('admin_page/pages/index.html.twig');
+        return $this->render(self::_PREFIX_PAGE_ADMIN_REDER . 'index.html.twig');
     }
 }

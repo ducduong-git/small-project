@@ -25,4 +25,8 @@ class UserRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
         return $user;
     }
+
+    public function getAll():? array {
+        return $this->findAll();
+    }
 }

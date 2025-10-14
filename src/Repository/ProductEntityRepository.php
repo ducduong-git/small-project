@@ -11,6 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductEntityRepository extends ServiceEntityRepository
 {
+    private const _TABLE_NAME = "product";
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ProductEntity::class);
@@ -44,10 +46,36 @@ class ProductEntityRepository extends ServiceEntityRepository
 
     public function update(ProductEntity $productEntity): ?ProductEntity
     {
-         // Entity is already managed, just flush
+        // Entity is already managed, just flush
         $this->getEntityManager()->flush();
 
         return $productEntity;
+    }
+
+    public function findProduct($filter)
+    {
+        $sql = 'SELECT * FROM ' . self::_TABLE_NAME . ' as p';
+
+        $conditions = [];
+        $params = [];
+
+        if (!empty($filter['search_name'])) {
+            $conditions[] = "name LIKE :name";
+            $params['name'] = '%' . $filter['search_name'] . '%';
+        }
+
+        if (!empty($filter['filter'])) {
+            $conditions[] = "cate_id = :cate_id";
+            $params['cate_id'] = $filter['filter'];
+        }
+
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+
+        $sql .= ' ORDER BY id';
+
+        return $this->getEntityManager()->getConnection()->executeQuery($sql, $params)->fetchAllAssociative();
     }
 
     // public function softDeleteCategory(int $id): ProductEntity

@@ -10,12 +10,10 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ProductService
 {
-    private ProductEntityRepository $productRepository;
     private string $uploadDir;
 
-    public function __construct(private HtmlSanitizerInterface $sanitizer, ProductEntityRepository $productRepository, ParameterBagInterface $params)
+    public function __construct(private HtmlSanitizerInterface $sanitizer, private ProductEntityRepository $productRepository, ParameterBagInterface $params)
     {
-        $this->productRepository = $productRepository;
         $this->uploadDir = $params->get('kernel.project_dir') . '/public/uploads/images/products';
     }
 
@@ -33,7 +31,6 @@ class ProductService
 
         return $product;
     }
-
 
     public function getAllProduct(): ?array
     {
@@ -154,5 +151,11 @@ class ProductService
         $this->productRepository->update($productEntity);
 
         return $productEntity;
+    }
+
+    public function getProducts(array $filter):? array {
+        $products = $this->productRepository->findProduct($filter);
+
+        return $products;
     }
 }

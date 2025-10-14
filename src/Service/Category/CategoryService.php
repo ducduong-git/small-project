@@ -9,11 +9,8 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 
 class CategoryService
 {
-    private CategoryRepository $categoryRepository;
-
-    public function __construct(private HtmlSanitizerInterface $sanitizer, CategoryRepository $categoryRepository)
+    public function __construct(private HtmlSanitizerInterface $sanitizer,private CategoryRepository $categoryRepository)
     {
-        $this->categoryRepository = $categoryRepository;
     }
 
     public function checkFormRequest(Request $request): ?CategoryEntity
