@@ -28,13 +28,14 @@
         if ( $.fn.DataTable.isDataTable('#productsTable') ) {
             $('#productsTable').DataTable().clear().destroy();
         }
-        
+
         $('#productsTable').DataTable({
         ajax: "{{ url("ajax_get_product", parameters = [], schemeRelative = false) }}",
         columns: [
             { data: 'id', title: 'ID', className: 'text-center' },
             { data: 'name', title: 'Name', className: 'text-center' },
             { data: 'qty', title: 'Quantity' , className: 'text-center'},
+            { data: 'category', title: 'Category' , className: 'text-center fw-bolder'},
             { data: 'status', title: 'Status' , className: 'text-center'},
             { data: 'price', title: 'Price' , className: 'text-center'},
             // Add more columns based on your product fields

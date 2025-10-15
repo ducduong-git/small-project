@@ -9,9 +9,7 @@ use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 
 class CategoryService
 {
-    public function __construct(private HtmlSanitizerInterface $sanitizer,private CategoryRepository $categoryRepository)
-    {
-    }
+    public function __construct(private HtmlSanitizerInterface $sanitizer, private CategoryRepository $categoryRepository) {}
 
     public function checkFormRequest(Request $request): ?CategoryEntity
     {
@@ -35,6 +33,11 @@ class CategoryService
     public function getExistCategory(): ?array
     {
         return $this->categoryRepository->getExistCategory();
+    }
+
+    public function filterCategory(array $condition, array $orderBy = [], int $limit = 0, int $offset = 0)
+    {
+        return $this->categoryRepository->findBy($condition, !empty($orderBy) ? $orderBy : [], $limit > 0 ? $limit : null, $offset > 0 ? $offset : null);
     }
 
     public function addNewCategory(CategoryEntity $categoryEntity): CategoryEntity

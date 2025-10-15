@@ -14,6 +14,8 @@ class ProductPageController extends AbstractController
     private const _PREFIX_PAGE_ADMIN_REDER = "admin_page/pages/product_pages/";
     private const _PREFIX_ADMIN = "//admin/";
 
+    private const _PREFIX_PAGE_PRODUCT = "shopee_page/pages/product_pages/";
+
     #[Route(self::_PREFIX_ADMIN . 'products', name: 'admin_product')]
     public function index(): Response
     {
@@ -64,4 +66,9 @@ class ProductPageController extends AbstractController
     //     $this->addFlash('success', 'Remove category complete');
     //     return $this->redirectToRoute('admin_categories');
     // }
+
+    #[Route('product-detail', name: 'app_product_detail')]
+    public function detail():Response {
+        return $this->render(self::_PREFIX_PAGE_PRODUCT . 'productDetail.html.twig');
+    }
 }

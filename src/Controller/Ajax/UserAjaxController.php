@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class UserAjaxController extends AbstractController
 {
 
-    #[Route('/ajax/get/user', name: 'ajax_get_product')]
+    #[Route('/ajax/get/user', name: 'ajax_get_user')]
     public function index(UserService $userService): JsonResponse
     {
         $users = $userService->getAll();

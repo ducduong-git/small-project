@@ -22,6 +22,7 @@ class ProductDataController
         ];
 
         $products = $this->productService->getProducts($filter);
+        $products = $this->normalizer->normalize($products, '');
 
         // Your custom logic here (not tied to an entity)
         // Example: Call an external service, compute something, etc.
@@ -40,6 +41,9 @@ class ProductDataController
     {
         $product = $this->productService->getSingleProduct($id);
 
+        $newProduct = $this->productService->getProductWithCategoryDTO($id);
+        $newProduct = $this->normalizer->normalize($newProduct, '');
+ 
         $productData = [
             'id' => $product->getId(),
             'name' => $product->getName(),
@@ -57,7 +61,23 @@ class ProductDataController
             "code" => 200,
             "success" => true,
             "data" => [
-                "items" =>  $productData
+                "items" =>  $productData,
+                "newProduct" => $newProduct
+            ]
+        ];
+
+        return new JsonResponse($data);
+    }
+
+    public function add(Request $request): JsonResponse
+    {
+        dd($request->request->all());
+
+        $data = [
+            "code" => 200,
+            "success" => true,
+            "data" => [
+                "items" => 'success'
             ]
         ];
 

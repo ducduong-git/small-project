@@ -14,24 +14,11 @@ class ProductAjaxController extends AbstractController
     #[Route('/ajax/get/products', name: 'ajax_get_product')]
     public function index(ProductService $productService): JsonResponse
     {
-        $products = $productService->getAllProduct();
-
-        // Convert entities to arrays
-        $data = array_map(function ($product) {
-            return [
-                'id' => $product->getId(),
-                'name' => $product->getName(),
-                'qty' => $product->getQty(),
-                'price' => number_format($product->getPrice(), 0, ',', '.') . ' ₫',
-                'status' => $product->getStatus() != 0 ? 'Active' : 'In Active',
-                'cateId' => $product->getCateId(),
-                'mainImg' => $product->getMainImg(),
-            ];
-        }, $products);
+        $products = $productService->getProductWithCategory([], 'prod.*, cate.name AS category');
 
         return new JsonResponse([
             'status' => 'success',
-            'data' => $data,
+            'data' => $products,
         ]);
     }
 }

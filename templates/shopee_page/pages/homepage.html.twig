@@ -1,105 +1,118 @@
 {% extends 'shopee_page/base.html.twig' %}
 
 {% block title %}
-  Home page
+	Home page
 {% endblock %}
 
 {% block body %}
-  <!-- Container -->
-  <div class="app__container">
-    <div class="grid wide">
-      <div class="row sm-gutter app_content">
-        <!-- Category left bar -->
-        <div class="col-2">
-          <nav class="category">
-            <h3 class="category__heading">Danh mục</h3>
+	<!-- Container -->
+	<div class="app__container">
+		<div class="grid wide">
+			<div
+				class="row sm-gutter app_content">
+				<!-- Category left bar -->
+				<div class="col-2">
+					<nav class="category">
+						<h3 class="category__heading">Danh mục</h3>
 
-            <ul class="category-list">
-              <li class="category-item category-item--active">
-                <a href="#" class="category-item__link">Tất cả</a>
-              </li>
-              {% for category in categories %}
-                <li class="category-item">
-                  <a href="#" class="category-item__link">{{ category.name }}</a>
-                </li>
-              {% endfor %}
-            </ul>
-          </nav>
-        </div>
+						<ul class="category-list">
+							<li class="category-item {% if filter is not defined %} category-item--active {% endif %}">
+								<a href="{{ url('app_homepage', parameters = [], schemeRelative = false) }}" class="category-item__link">Tất cả</a>
+							</li>
+							{% for category in categories %}
+								<li class="category-item {% if filter is defined and filter == category.id %} category-item--active {% endif %}">
+									<a href='{{ path("product_filter", {'category': category.id}) }}' class="category-item__link">{{ category.name }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</nav>
+				</div>
 
-        <!-- Product -->
-        <div class="col-10">
-          <!-- Filter bar -->
-          <div class="home-filter hide-on-mobile-tablet">
-            <span class="home-filter__label">Sắp xếp theo</span>
-            <button class="home-filter__btn btn">Phổ biến</button>
-            <button class="home-filter__btn btn btn--primary">Mới nhất</button>
-            <button class="home-filter__btn btn">Bán chạy</button>
+				<!-- Product -->
+				<div
+					class="col-10">
+					<!-- Filter bar -->
+					<div class="home-filter hide-on-mobile-tablet">
+						<span class="home-filter__label">Sắp xếp theo</span>
+						<!-- <button class="home-filter__btn btn">Phổ biến</button> -->
+						<button class="home-filter__btn btn btn--primary">Mới nhất</button>
+						<button class="home-filter__btn btn">Bán chạy</button>
 
-            <div class="select-input">
-              <span class="select-input__label">Giá</span>
-              <i class="select-input__icon fa-solid fa-angle-down"></i>
+						<div class="select-input">
+							<span class="select-input__label">Giá</span>
+							<i class="select-input__icon fa-solid fa-angle-down"></i>
 
-              <!-- List options -->
-              <ul class="select-input__list">
-                <li class="select-input__item">
-                  <a href="" class="select-input__link">Giá: Thấp đến Cao</a>
-                </li>
-                <li class="select-input__item">
-                  <a href="" class="select-input__link">Giá: Cao đến Thấp</a>
-                </li>
-              </ul>
-            </div>
+							<!-- List options -->
+							<ul class="select-input__list">
+								<li class="select-input__item">
+									<a href="{{ path('product_filter', app.request.query.all | merge({'price': 'lowToHigh'})) }}" class="select-input__link">Giá: Thấp đến Cao</a>
+								</li>
+								<li class="select-input__item">
+									<a href="{{ path('product_filter', app.request.query.all | merge({'price': 'highToLow'})) }}" class="select-input__link">Giá: Cao đến Thấp</a>
+								</li>
+							</ul>
+						</div>
 
-            <div class="home-filter__page">
-              <span class="home-filter__page-num"><span class="home-filter__page-current">1</span>/<span class="home-filter__page-total">14</span></span>
-              <div class="home-filter__page-control">
-                <a href="" class="home-filter__page-btn home-filter__page-btn-disabled"><i class="home-filter__page-icon fa-solid fa-angle-left"></i></a>
-                <a href="" class="home-filter__page-btn"><i class="home-filter__page-icon fa-solid fa-angle-right"></i></a>
-              </div>
-            </div>
-          </div>
+						<div class="home-filter__page">
+							<span class="home-filter__page-num">
+								<span class="home-filter__page-current">1</span>/<span class="home-filter__page-total">14</span>
+							</span>
+							<div class="home-filter__page-control">
+								<a href="" class="home-filter__page-btn home-filter__page-btn-disabled">
+									<i class="home-filter__page-icon fa-solid fa-angle-left"></i>
+								</a>
+								<a href="" class="home-filter__page-btn">
+									<i class="home-filter__page-icon fa-solid fa-angle-right"></i>
+								</a>
+							</div>
+						</div>
+					</div>
 
-          <!-- Product list -->
-          <div class="home-product">
-            <div class="row sm-gutter">
-              <!-- Product item -->
-              {{ include('shopee_page/components/product_item.html.twig', { products: products }) }}
-            </div>
-          </div>
+					<!-- Product list -->
+					<div class="home-product">
+						<div
+							class="row sm-gutter">
+							<!-- Product item -->
+							{{ include('shopee_page/components/product_item.html.twig', { products: products }) }}
+						</div>
+					</div>
 
-          <!-- Pagination -->
-          <ul class="pagination home-product__pagination">
-            <li class="pagination-item">
-              <a href="#" class="pagination-item__link"><i class="pagination-item__icon fa-solid fa-angle-left"></i></a>
-            </li>
-            <li class="pagination-item pagination-item--active">
-              <a href="#" class="pagination-item__link">1</a>
-            </li>
-            <li class="pagination-item">
-              <a href="#" class="pagination-item__link">2</a>
-            </li>
-            <li class="pagination-item">
-              <a href="#" class="pagination-item__link">3</a>
-            </li>
-            <li class="pagination-item">
-              <a href="#" class="pagination-item__link">4</a>
-            </li>
-            <li class="pagination-item">
-              <a href="#" class="pagination-item__link">5</a>
-            </li>
-            <li class="pagination-item">
-              <a href="#" class="pagination-item__link">...</a>
-            </li>
-            <li class="pagination-item">
-              <a href="#" class="pagination-item__link">14</a>
-            </li>
-            <li class="pagination-item">
-              <a href="#" class="pagination-item__link"><i class="pagination-item__icon fa-solid fa-angle-right"></i></a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
+					<!-- Pagination -->
+					<ul class="pagination home-product__pagination">
+						<li class="pagination-item">
+							<a href="#" class="pagination-item__link">
+								<i class="pagination-item__icon fa-solid fa-angle-left"></i>
+							</a>
+						</li>
+						<li class="pagination-item pagination-item--active">
+							<a href="#" class="pagination-item__link">1</a>
+						</li>
+						<li class="pagination-item">
+							<a href="#" class="pagination-item__link">2</a>
+						</li>
+						<li class="pagination-item">
+							<a href="#" class="pagination-item__link">3</a>
+						</li>
+						<li class="pagination-item">
+							<a href="#" class="pagination-item__link">4</a>
+						</li>
+						<li class="pagination-item">
+							<a href="#" class="pagination-item__link">5</a>
+						</li>
+						<li class="pagination-item">
+							<a href="#" class="pagination-item__link">...</a>
+						</li>
+						<li class="pagination-item">
+							<a href="#" class="pagination-item__link">14</a>
+						</li>
+						<li class="pagination-item">
+							<a href="#" class="pagination-item__link">
+								<i class="pagination-item__icon fa-solid fa-angle-right"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

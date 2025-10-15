@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="card-body table-responsive p-0 mx-3">
-        <table id="productsTable"></table>
+        <table id="usersTable"></table>
     </div>
 </div>
 {% endblock %} {% block extendFooter %}
@@ -25,12 +25,12 @@
 <script>
     $(document).ready(function() {
         // If DataTable already instantiated, destroy it
-        if ( $.fn.DataTable.isDataTable('#productsTable') ) {
-            $('#productsTable').DataTable().clear().destroy();
+        if ( $.fn.DataTable.isDataTable('#usersTable') ) {
+            $('#usersTable').DataTable().clear().destroy();
         }
         
-        $('#productsTable').DataTable({
-        ajax: "{{ url("ajax_get_product", parameters = [], schemeRelative = false) }}",
+        $('#usersTable').DataTable({
+        ajax: "{{ url("ajax_get_user", parameters = [], schemeRelative = false) }}",
         columns: [
             { data: 'id', title: 'ID', className: 'text-center' },
             { data: 'name', title: 'Name', className: 'text-center' },

@@ -37,9 +37,33 @@ class ProductService
         return $this->productRepository->getAllProduct();
     }
 
+    public function getProductWithCategory(array $filter = [], string $select = '*'): ?array
+    {
+        return $this->productRepository->getProductWithCategory($filter, $select);
+    }
+
     public function getExistProduct(): ?array
     {
         return $this->productRepository->getExistProduct();
+    }
+
+    public function filterProduct(array $parram): ?array
+    {
+        $limit = $offset = null;
+
+        if (isset($parram['page'])) {
+            $page = $parram['page'];
+            $limit = 12;
+            $offset =  $page > 1 ? $page - 1 * $limit : 0;
+        }
+
+        $filter['filter'] = isset($parram['category']) ? $parram['category'] : null;
+
+        $price = (isset($parram['price']) && $parram['price'] == 'lowToHigh') ? ['price' => 'ASC'] : ['price' => 'DESC'];
+
+        $products = $this->productRepository->findProduct($filter, $price, $limit, $offset);
+
+        return $products;
     }
 
     private function addImage($file, $name): String
@@ -153,9 +177,16 @@ class ProductService
         return $productEntity;
     }
 
-    public function getProducts(array $filter):? array {
+    public function getProducts(array $filter): ?array
+    {
         $products = $this->productRepository->findProduct($filter);
 
         return $products;
+    }
+
+    public function getProductWithCategoryDTO(int $id): ?array
+    {
+        $filter = ['id' => $id];
+        return $this->productRepository->getProductWithCategoryDTO($filter);
     }
 }
