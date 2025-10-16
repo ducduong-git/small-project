@@ -57,6 +57,16 @@ class SessionCheckSubscriber implements EventSubscriberInterface
                 $event->setController(fn() => new RedirectResponse('/'));
             }
         }
+
+        if (str_starts_with($path, '/admin/permission')) {
+            if (!$session->has('user_id')) {
+                $event->setController(fn() => new RedirectResponse('/error'));
+            }
+
+            if ($session->get('user_permission') != 1) {
+                $event->setController(fn() => new RedirectResponse('/error'));
+            }
+        }
     }
 
     public static function getSubscribedEvents(): array

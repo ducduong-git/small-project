@@ -15,22 +15,27 @@ class ProductDataController
 
     public function get(Request $request): JsonResponse
     {
+        $providerData = $request->attributes->get('data');
+
+        // Get through parrameter they want to filter like page, name product, status 
         $filter = [
             "page" => $request->query->get("page"),
             "filter" => $request->query->get("category"),
             "search_name" => $request->query->get("search_name"),
+            "status" => $request->query->get("status"),
         ];
 
         $products = $this->productService->getProducts($filter);
         $products = $this->normalizer->normalize($products, '');
 
+        $items = array_merge($products, $providerData['data']);
         // Your custom logic here (not tied to an entity)
         // Example: Call an external service, compute something, etc.
         $data = [
             "code" => 200,
             "success" => true,
             "data" => [
-                "items" => $products
+                "items" => $items
             ]
         ];
 
@@ -43,7 +48,7 @@ class ProductDataController
 
         $newProduct = $this->productService->getProductWithCategoryDTO($id);
         $newProduct = $this->normalizer->normalize($newProduct, '');
- 
+
         $productData = [
             'id' => $product->getId(),
             'name' => $product->getName(),

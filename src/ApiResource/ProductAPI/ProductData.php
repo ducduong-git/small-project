@@ -8,14 +8,16 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\QueryParameter;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\State\CategoryState\CategoryStateProvider; 
 
 #[ApiResource(
     shortName: 'Product',
+    provider: CategoryStateProvider::class,
     operations: [
         new GetCollection(
             uriTemplate: '/product-data',  // Your endpoint, e.g., /api/custom-data
             controller: 'App\Controller\API\ProductDataController::get',
-            read: false,  // Skip automatic entity read/listener if not needed
+            // read: false,  // Skip automatic entity read/listener if not needed
             parameters: [
                 'category' => new QueryParameter(
                     schema: ['type' => 'integer'],
@@ -24,6 +26,13 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
                 'search name' => new QueryParameter(
                     schema: ['type' => 'string'],
                     description: 'Search name of products'
+                ),
+                'status' => new QueryParameter(
+                    schema: [
+                        'type' => 'integer',
+                        'enum' => ['1', '2'] // 👈 Select box options
+                    ],
+                    description: 'Filter by product status'
                 ),
             ],
             paginationEnabled: true,

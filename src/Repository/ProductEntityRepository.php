@@ -65,6 +65,11 @@ class ProductEntityRepository extends ServiceEntityRepository
                 ->setParameter('name', '%' . $filter['search_name'] . '%');
         }
 
+        if (!empty($filter['status'])) {
+            $qb->andWhere('p.status = :status')
+                ->setParameter('status', $filter['status']);
+        }
+
         if (!empty($filter['filter'])) {
             $qb->andWhere('p.cateId = :cate_id')
                 ->setParameter('cate_id', $filter['filter']);

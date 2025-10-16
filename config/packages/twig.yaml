@@ -1,5 +1,8 @@
 twig:
     file_name_pattern: '*.twig'
+    paths:
+        # namespace for module
+        '%kernel.project_dir%/src/Module/Permission/templates': Permission
 
 when@test:
     twig:

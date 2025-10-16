@@ -73,7 +73,7 @@ class CategoryEntity
         return $this;
     }
 
-    public function getDeletedAt(): ?string
+    public function getDeletedAt(): ?\DateTimeInterface
     {
         return $this->deletedAt;
     }

@@ -18,3 +18,18 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Custom filtered attribute driver for Modules
+    App\Command\MakeModuleEntityCommand:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
+    App\Doctrine\FilteredAttributeDriver:
+        arguments:
+            $paths: ['%kernel.project_dir%/src/Module']
+        tags:
+            - { name: 'doctrine.metadata_driver', mapping: 'Modules' }
+
+    App\EventListener\Doctrine\EntityMetadataFilterSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber }
