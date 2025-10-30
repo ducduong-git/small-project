@@ -3,13 +3,18 @@
 namespace App\Module\Category\Entity;
 
 use App\Module\Category\Repository\CategoryRepository;
+use App\Module\Core\Entity\EntityInterface;
+use App\Module\Core\Entity\Timestampable;
+use App\Module\Core\Entity\UserTrackingTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table(name: 'category')]
 #[ORM\HasLifecycleCallbacks] // thông báo cho Doctrine rằng Entity này có các method callback (PrePersist, PreUpdate) để được gọi tự động.
-class CategoryEntity
+class CategoryEntity implements EntityInterface
 {
+    use Timestampable;
+    use UserTrackingTrait;
     private const IS_PARENT = 0;
 
     #[ORM\Id]
@@ -71,55 +76,5 @@ class CategoryEntity
     {
         $this->parentId = $parentId;
         return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeInterface
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(\DateTimeInterface $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-        return $this;
-    }
-
-    // --- Lifecycle callback methods ---
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        $now = new \DateTimeImmutable();
-        if ($this->createdAt === null) {
-            $this->createdAt = $now;
-        }
-        $this->updatedAt = $now;
-    }
-
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
     }
 }

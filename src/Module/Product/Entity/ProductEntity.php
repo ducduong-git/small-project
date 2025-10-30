@@ -2,15 +2,22 @@
 
 namespace App\Module\Product\Entity;
 
-use App\Repository\ProductEntityRepository;
+use App\Module\Core\Entity\EntityInterface;
+use App\Module\Core\Entity\Timestampable;
+use App\Module\Core\Entity\UserTrackingTrait;
+use App\Module\Product\Repository\ProductEntityRepository;
+
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductEntityRepository::class)]
 #[ORM\Table(name: 'product')]
 #[ORM\HasLifecycleCallbacks] // thông báo cho Doctrine rằng Entity này có các method callback (PrePersist, PreUpdate) để được gọi tự động.
-class ProductEntity
+class ProductEntity implements EntityInterface
 {
+    use Timestampable;
+    use UserTrackingTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -36,15 +43,6 @@ class ProductEntity
 
     #[ORM\Column]
     private ?int $cateId = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deletedAt = null;
 
     public function getId(): ?int
     {
@@ -133,58 +131,5 @@ class ProductEntity
         $this->cateId = $cateId;
 
         return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?\DateTimeImmutable
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    // --- Lifecycle callback methods ---
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        $now = new \DateTimeImmutable();
-        if ($this->createdAt === null) {
-            $this->createdAt = $now;
-        }
-        $this->updatedAt = $now;
-    }
-
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
     }
 }

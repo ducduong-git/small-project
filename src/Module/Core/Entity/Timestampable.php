@@ -32,7 +32,7 @@ trait Timestampable
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTimeImmutable $updatedAt): self
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
         return $this;
@@ -49,36 +49,17 @@ trait Timestampable
         return $this;
     }
 
-    public function setCreatedBy(string $createdBy): self
-    {
-        $this->createdBy = $createdBy;
-        return $this;
-    }
-
-    public function getCreatedBy(): ?string
-    {
-        return $this->createdBy;
-    }
-
-    public function setUpdatedBy(string $updatedBy): self
-    {
-        $this->updatedBy = $updatedBy;
-        return $this;
-    }
-
-    public function getUpdatedBy(): ?string
-    {
-        return $this->updatedBy;
-    }
-
+    // --- Lifecycle Callbacks ---
     #[ORM\PrePersist]
-    public function onPrePersistSetCreatedAt(): void
+    public function setTimestampsOnCreate(): void
     {
-        $this->createdAt = new DateTimeImmutable();
+        $now = new DateTimeImmutable();
+        $this->createdAt ??= $now;
+        $this->updatedAt = $now;
     }
 
     #[ORM\PreUpdate]
-    public function onPreUpdateSetUpdatedAt(): void
+    public function setTimestampsOnUpdate(): void
     {
         $this->updatedAt = new DateTimeImmutable();
     }

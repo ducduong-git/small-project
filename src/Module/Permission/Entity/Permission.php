@@ -4,14 +4,18 @@ namespace App\Module\Permission\Entity;
 
 use App\Module\Core\Entity\EntityInterface;
 use App\Module\Core\Entity\Timestampable;
+use App\Module\Core\Entity\UserTrackingTrait;
 use App\Module\Permission\Repository\PermissionRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PermissionRepository::class)]
 #[ORM\Table(name: 'permission')]
+#[ORM\HasLifecycleCallbacks] // thông báo cho Doctrine rằng Entity này có các method callback (PrePersist, PreUpdate) để được gọi tự động.
 class Permission implements EntityInterface
 {
     use Timestampable;
+    use UserTrackingTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]

@@ -2,6 +2,9 @@
 
 namespace App\Module\User\Entity;
 
+use App\Module\Core\Entity\EntityInterface;
+use App\Module\Core\Entity\Timestampable;
+use App\Module\Core\Entity\UserTrackingTrait;
 use App\Module\User\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -9,8 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
 #[ORM\HasLifecycleCallbacks] // thông báo cho Doctrine rằng Entity này có các method callback (PrePersist, PreUpdate) để được gọi tự động.
-class UserEntity
+class UserEntity implements EntityInterface
 {
+    use Timestampable;
+    use UserTrackingTrait;
     private const STATUS_ACTIVE = 1;
     private const ROLE_USER = 0;
 
@@ -45,12 +50,6 @@ class UserEntity
 
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $genderRole = null;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $updatedAt = null;
 
     // --- Getters and Setters ---
     public function getId(): ?int
@@ -152,44 +151,5 @@ class UserEntity
     {
         $this->genderRole = $genderRole;
         return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-        return $this;
-    }
-
-    // --- Lifecycle callback methods ---
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        $now = new \DateTimeImmutable();
-        if ($this->createdAt === null) {
-            $this->createdAt = $now;
-        }
-        $this->updatedAt = $now;
-    }
-
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
-    {
-        $this->updatedAt = new \DateTimeImmutable();
     }
 }
