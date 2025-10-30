@@ -3,6 +3,9 @@ twig:
     paths:
         # namespace for module
         '%kernel.project_dir%/src/Module/Permission/templates': Permission
+        '%kernel.project_dir%/src/Module/Category/templates'  : Category
+        '%kernel.project_dir%/src/Module/Product/templates'   : Product
+        '%kernel.project_dir%/src/Module/User/templates'      : User
 
 when@test:
     twig:

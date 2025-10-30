@@ -24,7 +24,7 @@ services:
         arguments:
             $projectDir: '%kernel.project_dir%'
 
-    App\Doctrine\FilteredAttributeDriver:
+    App\Module\Core\Doctrine\FilteredAttributeDriver:
         arguments:
             $paths: ['%kernel.project_dir%/src/Module']
         tags:

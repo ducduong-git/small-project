@@ -28,7 +28,9 @@
             "program": "${file}",
             "cwd": "${fileDirname}",
             "port": 0,
-            "runtimeArgs": ["-dxdebug.start_with_request=yes"],
+            "runtimeArgs": [
+                "-dxdebug.start_with_request=yes"
+            ],
             "env": {
                 "XDEBUG_MODE": "debug,develop",
                 "XDEBUG_CONFIG": "client_port=${port}"
@@ -58,7 +60,12 @@
             "type": "php",
             "request": "launch",
             "noDebug": false,
-            "runtimeArgs": ["-S", "localhost:8000", "-t", "."],
+            "runtimeArgs": [
+                "-S",
+                "localhost:8000",
+                "-t",
+                "."
+            ],
             "cwd": "${workspaceRoot}/public",
             "serverReadyAction": {
                 "action": "openExternally"
@@ -70,7 +77,12 @@
             "type": "php",
             "request": "launch",
             "noDebug": true,
-            "runtimeArgs": ["-S", "localhost:8000", "-t", "."],
+            "runtimeArgs": [
+                "-S",
+                "localhost:8000",
+                "-t",
+                "."
+            ],
             "cwd": "${workspaceRoot}/public",
             "serverReadyAction": {
                 "action": "openExternally"

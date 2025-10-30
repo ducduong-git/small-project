@@ -2,7 +2,7 @@
 
 namespace App\Controller\LoginController;
 
-use App\Service\User\AuthenticationService;
+use App\Service\AuthenticationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

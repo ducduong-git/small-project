@@ -4,7 +4,7 @@ namespace App\State\CategoryState;
 
 use ApiPlatform\State\ProviderInterface;
 use ApiPlatform\Metadata\Operation;
-use App\Service\Category\CategoryService;
+use App\Module\Category\Service\CategoryService;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 

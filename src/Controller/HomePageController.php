@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\Category\CategoryService;
+use App\Module\Category\Service\CategoryService;
 use App\Service\Product\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
