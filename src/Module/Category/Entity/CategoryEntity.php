@@ -31,15 +31,6 @@ class CategoryEntity implements EntityInterface
     #[ORM\Column(type: 'integer', nullable: true)]
     private ?int $parentId = self::IS_PARENT;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $deletedAt = null;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $createdAt = null;
-
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $updatedAt = null;
-
     public function getId(): ?int
     {
         return $this->id;
